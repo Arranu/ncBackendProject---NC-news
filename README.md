@@ -1,3 +1,5 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+To begin using this api, 2 .env files will need to be created.
+To utilise the text enviroment, create a '.env-test' file with a single line 'PGDATABASE=' and the name of the test db (see setup.sql for the db name). 
+Now do the same for the development ('.env-development').
