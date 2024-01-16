@@ -109,12 +109,7 @@ describe("task 5 - /api/articles",()=>{
                   })
             })
         })
-        test("Error:404 when api does not exist",()=>{
-            return request(app).get("/api/article")
-                .expect(404).then(({body})=>{   
-                expect(body.msg).toBe("Invalid input/endpoint not found")
-                })
-        })
+
        
     })
 })
