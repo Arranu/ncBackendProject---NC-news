@@ -1,18 +1,24 @@
-const {topicsMod, specArtMod} = require("../models/model")
+const {fetchAllArt,fetchSpecArt,fetchTopics} = require("../models/model")
 const apiFile = require("../endpoints.json")
-exports.topicsCont = (req,res)=>{    
-    topicsMod().then((result)=>{
+exports.getTopics = (req,res)=>{    
+    fetchTopics().then((result)=>{
         res.status(200).send({topics:result})
     
     })
 }
-exports.apiCont = (req,res)=>{
+exports.getApi = (req,res)=>{
     res.status(200).send({endpoints:apiFile})
 }
 
-exports.specArtCont = (req,res,next) =>{
+exports.getSpecArt = (req,res,next) =>{
 const iD = req.params.article_id
-    specArtMod(iD).then((result)=>{
+    fetchSpecArt(iD).then((result)=>{
         res.status(200).send({article:result})
+    }).catch(next)
+}
+
+exports.getAllArt = (req,res,next)=>{
+    fetchAllArt().then((result)=>{
+        res.status(200).send({articles:result})
     }).catch(next)
 }

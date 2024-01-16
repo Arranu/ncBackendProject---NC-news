@@ -13,3 +13,7 @@ exports.invalidError = (err,req,res,next) =>{
     res.status(400).send({msg: 'Bad request'})
   } else next(err)
 }
+exports.internalError = (err,req,res,next)=>{
+  console.log(err)
+  res.status(500).send({msg:'Internal error'})
+}
