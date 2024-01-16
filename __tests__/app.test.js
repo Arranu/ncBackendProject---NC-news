@@ -3,6 +3,7 @@ const db = require("../db/connection")
 const data = require("../db/data/test-data")
 const app = require("../app")
 const request =require("supertest")
+const apiFile = require("../endpoints.json")
 
 afterAll(() => db.end());
 beforeEach(() => seed(data));
@@ -25,6 +26,14 @@ describe("task 2 - /api/topics",()=>{
             .expect(404).then(({body})=>{   
             expect(body.msg).toBe("Invalid input/endpoint not found")
             })
+        })
+    })
+})
+describe("task 3 - /api",()=>{
+    test("returns correct info from JSON file",()=>{
+        return request(app).get("/api")
+        .expect(200).then(({body})=>{
+        expect(body.endpoints).toMatchObject(apiFile)
         })
     })
 })
