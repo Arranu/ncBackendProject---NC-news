@@ -4,7 +4,7 @@ const data = require("../db/data/test-data")
 const app = require("../app")
 const request =require("supertest")
 const apiFile = require("../endpoints.json")
-
+const {convertTimestampToDate} = require("../db/seeds/utils")
 afterAll(() => db.end());
 beforeEach(() => seed(data));
 
@@ -43,7 +43,7 @@ describe("task 4 - /api/articles/:article_id",()=>{
         return request(app).get("/api/articles/1")
             .expect(200).then(({body})=>{
                 const datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
-            expect(body.article).toMatchObject(expect.objectContaining({
+            expect(body.article).toMatchObject({
                 article_id:1,
                 votes:0,
                 title: "Living in the shadow of a great man",
@@ -54,7 +54,7 @@ describe("task 4 - /api/articles/:article_id",()=>{
                 votes: 100,
                 article_img_url:
                     "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          }))
+          })
         })
         
     })
@@ -62,7 +62,7 @@ describe("task 4 - /api/articles/:article_id",()=>{
             return request(app).get("/api/articles/2")
             .expect(200).then(({body})=>{
                 const datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
-            expect(body.article).toMatchObject(expect.objectContaining({
+            expect(body.article).toMatchObject({
                 article_id:2,
                 votes:0,
                 title: "Sony Vaio; or, The Laptop",
@@ -72,21 +72,49 @@ describe("task 4 - /api/articles/:article_id",()=>{
                 created_at: expect.stringMatching(datePattern),
                 article_img_url:
                   "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-              }))
+              })
             })
             
         })
-        test("Error:404 when input is valid but not found",()=>{
+        test("Error:404 when article_id is valid but not found",()=>{
             return request(app).get("/api/articles/999")
             .expect(404).then(({body})=>{   
                 expect(body.msg).toBe('article does not exist')
                 })
         })
-        test("Error:400 when input is invalid",()=>{
+        test("Error:400 when article_id is invalid",()=>{
             return request(app).get("/api/articles/not-a-value")
             .expect(400).then(({body})=>{
                 expect(body.msg).toBe('Bad request')
                 })
         })
+    })
+})
+describe("task 5 - /api/articles",()=>{
+    describe("GET",()=>{
+        test("status: 200 and returns an array of all articles with correct keys, ordered by date descending",()=>{
+            return request(app).get("/api/articles")
+            .expect(200).then(({body})=>{
+                const datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+                expect(body.articles.length).toBe(13)
+                expect(body.articles[0]).toMatchObject({
+                    article_id: 3,
+                    author: 'icellusedkars',
+                    title: 'Eight pug gifs that remind me of mitch',
+                    topic: 'mitch',
+                    created_at: expect.stringMatching(datePattern),
+                    votes: 0,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    comment_count : "2"
+                  })
+            })
+        })
+        test("Error:404 when api does not exist",()=>{
+            return request(app).get("/api/article")
+            .expect(404).then(({body})=>{   
+            expect(body.msg).toBe("Invalid input/endpoint not found")
+            })
+        })
+       
     })
 })
