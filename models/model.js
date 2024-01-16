@@ -40,8 +40,18 @@ exports.fetchAllComs = (iD)=>{
     query += ` WHERE article_id = ${iD}`
     query += ` ORDER BY created_at`
     return db.query(query).then(({rows})=>{
-        if(rows.length < 1) return Promise.reject({status:404 ,msg:'article does not exist'})
+        
+        if(rows.length < 1) {
+            return db.query(`SELECT * FROM articles WHERE article_id = $1`,[iD]).then(({rows})=>{
+                if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
+                else return Promise.reject({status:404 ,msg:'article does not exist'})
+            })
+            
+        }
         return rows
     })
-    
 }
+
+// exports.insertComment = (article_id, )=>{
+
+// }

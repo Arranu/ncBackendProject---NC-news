@@ -143,11 +143,12 @@ describe("task 6 - /api/articles/:article_id/comments",()=>{
                 expect(body.msg).toBe('Bad request')
                 })
         })
-        test("Error:400 when article_id is invalid (single string without -)",()=>{
-            return request(app).get("/api/articles/value/comments")
-            .expect(400).then(({body})=>{
-                expect(body.msg).toBe('Bad request')
+        test("Status:200 when article_id is valid but no comments",()=>{
+            return request(app).get("/api/articles/13/comments")
+            .expect(200).then(({body})=>{
+                expect(body.msg).toBe('No comments for article 13')
                 })
         })
+
     })
 })
