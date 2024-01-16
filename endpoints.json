@@ -45,7 +45,7 @@
   },
   "GET /api/articles/:article_id/comments":{
     "description": "serves an array of comment objects associated with requested article_id",
-    "queries": ["created_at"],
+    "queries": ["article_id"],
     "exampleResponse": {
       "comment_id": 10,
       "body": "git push origin master",
