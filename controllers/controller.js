@@ -1,10 +1,9 @@
-const {fetchAllArt,fetchSpecArt,fetchTopics} = require("../models/model")
+const {fetchAllArt,fetchSpecArt,fetchTopics,fetchAllComs} = require("../models/model")
 const apiFile = require("../endpoints.json")
-exports.getTopics = (req,res)=>{    
+exports.getTopics = (req,res,next)=>{    
     fetchTopics().then((result)=>{
         res.status(200).send({topics:result})
-    
-    })
+    }).catch(next)
 }
 exports.getApi = (req,res)=>{
     res.status(200).send({endpoints:apiFile})
@@ -20,5 +19,11 @@ const iD = req.params.article_id
 exports.getAllArt = (req,res,next)=>{
     fetchAllArt().then((result)=>{
         res.status(200).send({articles:result})
+    }).catch(next)
+}
+exports.getAllComs = (req,res,next)=>{
+const iD = req.params.article_id
+    fetchAllComs(iD).then((result)=>{
+        res.status(200).send({comments:result})
     }).catch(next)
 }
