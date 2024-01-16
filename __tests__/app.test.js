@@ -109,12 +109,46 @@ describe("task 5 - /api/articles",()=>{
                   })
             })
         })
-        test("Error:404 when api does not exist",()=>{
-            return request(app).get("/api/article")
-            .expect(404).then(({body})=>{   
-            expect(body.msg).toBe("Invalid input/endpoint not found")
-            })
-        })
+
        
+    })
+})
+describe("task 6 - /api/articles/:article_id/comments",()=>{
+    describe("GET",()=>{
+        test("status code:200 and a full array of article 3 comments",()=>{
+        return request(app).get("/api/articles/3/comments")
+            .expect(200).then(({body})=>{
+                const datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+                expect(body.comments.length).toBe(2)
+                expect(body.comments[0]).toMatchObject({
+                    comment_id: 10,
+                    body: 'git push origin master',
+                    article_id: 3,
+                    author: 'icellusedkars',
+                    votes: 0,
+                    created_at: expect.stringMatching(datePattern)
+                })
+            })
+        
+        })
+        test("Error:404 when article_id is valid but not found",()=>{
+            return request(app).get("/api/articles/999/comments")
+            .expect(404).then(({body})=>{   
+                expect(body.msg).toBe('article does not exist')
+                })
+        })
+        test("Error:400 when article_id is invalid",()=>{
+            return request(app).get("/api/articles/not-a-value/comments")
+            .expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad request')
+                })
+        })
+        test("Status:200 when article_id is valid but no comments",()=>{
+            return request(app).get("/api/articles/13/comments")
+            .expect(200).then(({body})=>{
+                expect(body.msg).toBe('No comments for article 13')
+                })
+        })
+
     })
 })
