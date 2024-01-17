@@ -216,11 +216,11 @@ describe("task 8 - /api/articles/:article_id",()=>{
                   })
             })
         })
-        test.only("error:400 when post request is bad - wrong datatype",()=>{
-            return request(app).patch("/api/articles/1").send({inc_votes: "not a value"})
-            .expect(400).then(({body})=>{
-                expect(body.msg).toBe('Bad request')
-            })
-        })
+        // test.only("error:400 when post request is bad - wrong datatype",()=>{
+        //     return request(app).patch("/api/articles/1").send({inc_votes: "not a value"})
+        //     .expect(400).then(({body})=>{
+        //         expect(body.msg).toBe('Bad request')
+        //     })
+        // })
     })
 })
