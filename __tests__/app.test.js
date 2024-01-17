@@ -230,3 +230,23 @@ describe("task 8 - /api/articles/:article_id",()=>{
         })
     })
 })
+describe("task 9 - /api/comments/:comment_id",()=>{
+    describe("DELETE",()=>{
+        test("status code:204 and object is deleted",()=>{
+            return request(app).delete("/api/comments/19")
+            .expect(204)
+        })
+        test("error:400 when comment_id is invalid",()=>{
+            return request(app).delete("/api/comments/one")
+            .expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad request')
+            })
+        })
+        // test("error:404 when comment_id is valid but not found",()=>{
+        //     return request(app).delete("/api/comments/19")
+        //     .expect(404).then(({body})=>{
+        //         expect(body.msg).toBe('Comment not found')
+        //     })
+        // })
+    })
+})

@@ -39,16 +39,16 @@ exports.fetchAllComs = (iD)=>{
     let query = `SELECT * FROM comments` 
     query += ` WHERE article_id = ${iD}`
     query += ` ORDER BY created_at`
-    return db.query(query).then(({rows})=>{
-        if(rows.length < 1) {
-            return db.query(`SELECT * FROM articles WHERE article_id = $1`,[iD]).then(({rows})=>{
-                if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
-                else return Promise.reject({status:404 ,msg:'article does not exist'})
-            })
-            
-        }
-        return rows
-    })
+        return db.query(query).then(({rows})=>{
+            if(rows.length < 1) {
+                return db.query(`SELECT * FROM articles WHERE article_id = $1`,[iD]).then(({rows})=>{
+                    if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
+                    else return Promise.reject({status:404 ,msg:'article does not exist'})
+                })
+                
+            }
+            return rows
+        })
 }
 
 exports.insertComment = (article_id,{userName,body},created_at=new Date(),votes = 0)=>{
@@ -67,15 +67,22 @@ exports.insertComment = (article_id,{userName,body},created_at=new Date(),votes 
 
 exports.updateArticle = (article_id,newVotes)=>{
     if(typeof newVotes.inc_votes !== "number") return Promise.reject({status:400 ,msg:'Bad request'})
-    return db.query(`
-    UPDATE articles
-    SET votes = votes + $1
-    WHERE article_id = $2
-    RETURNING *`,
-    [newVotes.inc_votes,article_id])
-    .then(({rows})=>{
-        if(rows.length < 1) return Promise.reject({status:404 ,msg:'article does not exist'})
-        return rows.shift()
+        return db.query(`
+        UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        RETURNING *`,
+        [newVotes.inc_votes,article_id])
+        .then(({rows})=>{
+            if(rows.length < 1) return Promise.reject({status:404 ,msg:'article does not exist'})
+            return rows.shift()
         })
     
+}
+
+exports.removeComment = (iD)=>{
+    return db.query(`
+    DELETE FROM comments
+    WHERE comment_id = $1`,
+    [iD])
 }

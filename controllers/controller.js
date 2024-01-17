@@ -1,4 +1,4 @@
-const {fetchAllArt,fetchSpecArt,fetchTopics,fetchAllComs,insertComment,updateArticle} = require("../models/model")
+const {fetchAllArt,fetchSpecArt,fetchTopics,fetchAllComs,insertComment,updateArticle,removeComment} = require("../models/model")
 const apiFile = require("../endpoints.json")
 exports.getTopics = (req,res,next)=>{    
     fetchTopics().then((result)=>{
@@ -43,5 +43,12 @@ const iD = req.params.article_id
 const newVotes = req.body
     updateArticle(iD,newVotes).then((updatedArt)=>{
         res.status(200).send({updatedArt})
+    }).catch(next)
+}
+
+exports.deleteComment = (req,res,next)=>{
+const iD = req.params.comment_id
+    removeComment(iD).then(()=>{
+        res.status(204).send()
     }).catch(next)
 }
