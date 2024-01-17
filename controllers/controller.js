@@ -41,7 +41,6 @@ const newComment = req.body
 exports.patchArticle = (req,res,next)=>{
 const iD = req.params.article_id
 const newVotes = req.body
-console.log(newVotes,"<-newVotes")
     updateArticle(iD,newVotes).then((updatedArt)=>{
         res.status(200).send({updatedArt})
     }).catch(next)
