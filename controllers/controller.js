@@ -30,10 +30,10 @@ const iD = req.params.article_id
     }).catch(next)
 }
 
-// exports.postComment = (req,res,next)=>{
-// const iD = req.params.article_id
-// const newComment = req.body
-//     insertComment(iD,newComment).then((newPost)=>{
-//         res.status(201).send({newPost})
-//     }).catch(next)
-// }
+exports.postComment = (req,res,next)=>{
+const iD = req.params.article_id
+const newComment = req.body
+    insertComment(iD,newComment).then((newPost)=>{
+        res.status(201).send({newPost})
+    }).catch(next)
+}

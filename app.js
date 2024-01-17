@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 const {getTopics,getApi,getSpecArt,getAllArt,getAllComs,postComment} = require("./controllers/controller")
-const {notFoundEndpoint,customError,invalidError,internalError} = require("./error-handling/error-handlers")
+const {notFoundEndpoint,customError,invalidError,internalError, forbiddenError} = require("./error-handling/error-handlers")
 app.use(express.json())
 //get all topics
 app.get("/api/topics", getTopics)
@@ -19,9 +19,10 @@ app.get("/api/articles",getAllArt)
 app.get("/api/articles/:article_id/comments", getAllComs)
 
 //post new comment
-// app.post("/api/articles/:article_id/comments",postComment)
+app.post("/api/articles/:article_id/comments",postComment)
 
 app.all("/*", notFoundEndpoint)
+app.use(forbiddenError)
 app.use(customError)
 app.use(invalidError)
 app.use(internalError)

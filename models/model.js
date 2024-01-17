@@ -52,6 +52,17 @@ exports.fetchAllComs = (iD)=>{
     })
 }
 
-// exports.insertComment = (article_id, )=>{
-
-// }
+exports.insertComment = (article_id,{userName,body},created_at=new Date(),votes = 0)=>{
+    if(typeof userName !=="string"||typeof body!=="string") return Promise.reject({status:400 ,msg:'Bad request'})
+    else{
+return db.query(`
+INSERT INTO comments
+(article_id, author,body,created_at,votes) 
+VALUES 
+($1,$2,$3,$4,$5) 
+RETURNING *`,
+[article_id,userName,body,created_at,votes])
+.then(({rows})=>{
+    return rows.shift()
+})}
+}
