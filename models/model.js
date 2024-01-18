@@ -6,6 +6,13 @@ exports.fetchTopics = () => {
         return rows
     })
 }
+exports.fetchUsers = ()=>{
+    return db.query(`SELECT *
+                    FROM 
+                    users;`).then(({rows})=>{
+        return rows
+    })
+}
 
 exports.fetchSpecArt = (iD)=>{
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [iD]).then(({rows})=>{

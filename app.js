@@ -1,19 +1,22 @@
 const express = require("express")
 const app = express()
-const {getTopics,getApi,getSpecArt,getAllArt,getAllComs,postComment,patchArticle,deleteComment} = require("./controllers/controller")
+const {getTopics,getApi,getUsers,getSpecArt,getAllArt,getAllComs,postComment,patchArticle,deleteComment} = require("./controllers/controller")
 const {notFoundEndpoint,customError,invalidError,internalError, unprocessError} = require("./error-handling/error-handlers")
 app.use(express.json())
-//get all topics
-app.get("/api/topics", getTopics)
-
 //get all endpoints
 app.get("/api", getApi)
 
-//get specific article
-app.get("/api/articles/:article_id",getSpecArt)
+//get all topics
+app.get("/api/topics", getTopics)
+
+//get all users
+app.get("/api/users",getUsers)
 
 //get all articles
 app.get("/api/articles",getAllArt)
+
+//get specific article
+app.get("/api/articles/:article_id",getSpecArt)
 
 //get all comments for specific article
 app.get("/api/articles/:article_id/comments", getAllComs)
