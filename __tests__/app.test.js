@@ -77,7 +77,7 @@ describe("task 4 - /api/articles/:article_id",()=>{
         test("error:404 when article_id is valid but not found",()=>{
             return request(app).get("/api/articles/999")
             .expect(404).then(({body})=>{   
-                expect(body.msg).toBe('article does not exist')
+                expect(body.msg).toBe('Article does not exist')
                 })
         })
         test("error:400 when article_id is invalid",()=>{
@@ -130,7 +130,7 @@ describe("task 6 - /api/articles/:article_id/comments",()=>{
         test("error:404 when article_id is valid but not found",()=>{
             return request(app).get("/api/articles/999/comments")
             .expect(404).then(({body})=>{   
-                expect(body.msg).toBe('article does not exist')
+                expect(body.msg).toBe('Article does not exist')
                 })
         })
         test("error:400 when article_id is invalid",()=>{
@@ -225,7 +225,33 @@ describe("task 8 - /api/articles/:article_id",()=>{
         test("error:404 when requested article does not exist",()=>{
             return request(app).patch("/api/articles/999").send({inc_votes: 4})
             .expect(404).then((result)=>{
-                expect(result.body.msg).toBe('article does not exist')
+                expect(result.body.msg).toBe('Article does not exist')
+            })
+        })
+        test("error:400 when requested article does not exist",()=>{
+            return request(app).patch("/api/articles/one").send({inc_votes: 4})
+            .expect(400).then((result)=>{
+                expect(result.body.msg).toBe('Bad request')
+            })
+        })
+    })
+})
+describe("task 9 - /api/comments/:comment_id",()=>{
+    describe("DELETE",()=>{
+        test("status code:204 and object is deleted",()=>{
+            return request(app).delete("/api/comments/8")
+            .expect(204)
+        })
+        test("error:400 when comment_id is invalid",()=>{
+            return request(app).delete("/api/comments/one")
+            .expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad request')
+            })
+        })
+        test("error:404 when comment_id is valid but not found",()=>{
+            return request(app).delete("/api/comments/19")
+            .expect(404).then(({body})=>{
+                expect(body.msg).toBe('Comment does not exist')
             })
         })
     })
