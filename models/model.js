@@ -9,7 +9,7 @@ exports.fetchTopics = () => {
 
 exports.fetchSpecArt = (iD)=>{
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [iD]).then(({rows})=>{
-        if(rows.length < 1) return Promise.reject({status:404 ,msg:'article does not exist'})
+        if(rows.length < 1) return Promise.reject({status:404 ,msg:'Article does not exist'})
         return rows.shift()
     })
 }
@@ -43,7 +43,7 @@ exports.fetchAllComs = (iD)=>{
             if(rows.length < 1) {
                 return db.query(`SELECT * FROM articles WHERE article_id = $1`,[iD]).then(({rows})=>{
                     if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
-                    else return Promise.reject({status:404 ,msg:'article does not exist'})
+                    else return Promise.reject({status:404 ,msg:'Article does not exist'})
                 })
                 
             }
@@ -74,15 +74,22 @@ exports.updateArticle = (article_id,newVotes)=>{
         RETURNING *`,
         [newVotes.inc_votes,article_id])
         .then(({rows})=>{
-            if(rows.length < 1) return Promise.reject({status:404 ,msg:'article does not exist'})
+            if(rows.length < 1) return Promise.reject({status:404 ,msg:'Article does not exist'})
             return rows.shift()
         })
     
 }
 
 exports.removeComment = (iD)=>{
-    return db.query(`
-    DELETE FROM comments
-    WHERE comment_id = $1`,
-    [iD])
+    return db.query(`SELECT * FROM comments
+                    WHERE comment_id = $1`,[iD])
+                    .then(({rows})=>{
+                        
+                        if(rows.length < 1) return Promise.reject({status:404 ,msg:'Comment does not exist'})
+                        else{                        
+                        return db.query(`
+                        DELETE FROM comments
+                        WHERE comment_id = $1`,
+                        [iD])}
+                    })
 }
