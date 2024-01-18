@@ -40,7 +40,6 @@ exports.fetchAllComs = (iD)=>{
     query += ` WHERE article_id = ${iD}`
     query += ` ORDER BY created_at`
     return db.query(query).then(({rows})=>{
-        
         if(rows.length < 1) {
             return db.query(`SELECT * FROM articles WHERE article_id = $1`,[iD]).then(({rows})=>{
                 if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
@@ -54,15 +53,29 @@ exports.fetchAllComs = (iD)=>{
 
 exports.insertComment = (article_id,{userName,body},created_at=new Date(),votes = 0)=>{
     if(typeof userName !=="string"||typeof body!=="string") return Promise.reject({status:400 ,msg:'Bad request'})
-    else{
-return db.query(`
-INSERT INTO comments
-(article_id, author,body,created_at,votes) 
-VALUES 
-($1,$2,$3,$4,$5) 
-RETURNING *`,
-[article_id,userName,body,created_at,votes])
-.then(({rows})=>{
-    return rows.shift()
-})}
+        return db.query(`
+        INSERT INTO comments
+        (article_id, author,body,created_at,votes) 
+        VALUES 
+        ($1,$2,$3,$4,$5) 
+        RETURNING *`,
+        [article_id,userName,body,created_at,votes])
+        .then(({rows})=>{
+            return rows.shift()
+        })
+}
+
+exports.updateArticle = (article_id,newVotes)=>{
+    if(typeof newVotes.inc_votes !== "number") return Promise.reject({status:400 ,msg:'Bad request'})
+    return db.query(`
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *`,
+    [newVotes.inc_votes,article_id])
+    .then(({rows})=>{
+        if(rows.length < 1) return Promise.reject({status:404 ,msg:'article does not exist'})
+        return rows.shift()
+        })
+    
 }
