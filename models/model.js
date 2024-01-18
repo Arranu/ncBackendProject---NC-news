@@ -21,9 +21,10 @@ exports.fetchSpecArt = (iD)=>{
     })
 }
 
-exports.fetchAllArt = ()=>{ 
-    return db.query(
-        `SELECT 
+exports.fetchAllArt = (topic=undefined)=>{
+    if(topic === undefined){
+        return db.query(`
+        SELECT 
         articles.article_id,
         articles.author,
         articles.title,
@@ -34,12 +35,32 @@ exports.fetchAllArt = ()=>{
         COUNT(comments.article_id) AS comment_count
         FROM articles
         LEFT JOIN comments 
-        ON articles.article_id = comments.article_id
+        ON articles.article_id = comments.article_id 
         GROUP BY articles.article_id
-        ORDER BY articles.created_at DESC`)
-    .then(({rows})=>{
-            return rows
-        })
+        ORDER BY created_at DESC;`).then(({rows})=>{
+                return rows
+            })  
+    }else{
+        return db.query(`
+        SELECT 
+        articles.article_id,
+        articles.author,
+        articles.title,
+        articles.topic,
+        articles.created_at,
+        articles.votes,
+        articles.article_img_url,
+        COUNT(comments.article_id) AS comment_count
+        FROM articles
+        LEFT JOIN comments 
+        ON articles.article_id = comments.article_id 
+        WHERE articles.topic = $1
+        GROUP BY articles.article_id
+        ORDER BY created_at DESC;`, [topic]).then(({rows})=>{
+                return rows
+            })
+
+    }
 }
 
 exports.fetchAllComs = (iD)=>{

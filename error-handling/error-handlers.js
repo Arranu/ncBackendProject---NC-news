@@ -10,6 +10,7 @@ exports.customError = (err, req, res, next) => {
 
 exports.invalidError = (err,req,res,next) =>{
   if(err.code ==="22P02"|| err.code === "42703"|| err.code ==="23502"){
+    console.log(err)
     res.status(400).send({msg: 'Bad request'})
   } else next(err)
 }
