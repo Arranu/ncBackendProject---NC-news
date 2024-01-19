@@ -27,8 +27,8 @@
     }
   },
   "GET /api/articles/:article_id":{
-    "description": "serves an article object associated with requested article_id",
-    "queries": [],
+    "description": "serves an article object associated with requested article_id, QUERY - can be queried with a topic to filter results based on input query",
+    "queries": ["topic"],
     "exampleResponse": {
       "article": {
         "article_id":2,
