@@ -27,13 +27,13 @@ node.js "^20.10.0"
 $ sudo apt install postgresql
 postgresql: "^14.10"
 
-$ npm install <dev_dependencies> --save-dev: 
+$ npm install <dev_dependencies> --save-dev
     "husky" "^8.0.3"
     "jest" "^27.5.1"
     "jest-extended" "^2.0.0"
     "pg-format" "^1.0.4"
 
-$ npm install <dependencies>:
+$ npm install <dependencies>
     "dotenv" "^16.0.0"
     "express" "^4.18.2"
     "pg" "^8.7.3"
