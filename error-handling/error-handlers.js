@@ -14,6 +14,7 @@ exports.invalidError = (err,req,res,next) =>{
   } else next(err)
 }
 exports.internalError = (err,req,res,next)=>{
+  console.log(err)
   res.status(500).send({msg:'Internal error'})
 }
 exports.unprocessError = (err,req,res,next)=>{
