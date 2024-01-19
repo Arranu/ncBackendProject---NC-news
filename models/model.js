@@ -1,3 +1,4 @@
+const { promises } = require("supertest/lib/test")
 const db = require("../db/connection")
 
 
@@ -21,26 +22,58 @@ exports.fetchSpecArt = (iD)=>{
     })
 }
 
-exports.fetchAllArt = ()=>{ 
-    return db.query(
-        `SELECT 
-        articles.article_id,
-        articles.author,
-        articles.title,
-        articles.topic,
-        articles.created_at,
-        articles.votes,
-        articles.article_img_url,
-        COUNT(comments.article_id) AS comment_count
-        FROM articles
-        LEFT JOIN comments 
-        ON articles.article_id = comments.article_id
-        GROUP BY articles.article_id
-        ORDER BY articles.created_at DESC`)
-    .then(({rows})=>{
-            return rows
-        })
-}
+exports.fetchAllArt = (topic)=>{
+    return db.query(`SELECT slug FROM topics`).then(({rows})=>{
+        if(rows.some((row)=>{
+            return topic === row.slug
+        })||topic ===undefined)
+        {if(topic === undefined){
+            return db.query(`
+            SELECT 
+            articles.article_id,
+            articles.author,
+            articles.title,
+            articles.topic,
+            articles.created_at,
+            articles.votes,
+            articles.article_img_url,
+            COUNT(comments.article_id) AS comment_count
+            FROM articles
+            LEFT JOIN comments 
+            ON articles.article_id = comments.article_id 
+            GROUP BY articles.article_id
+            ORDER BY created_at DESC;`).then(({rows})=>{
+                    return rows
+                })  
+        }else{
+            return db.query(`
+            SELECT 
+            articles.article_id,
+            articles.author,
+            articles.title,
+            articles.topic,
+            articles.created_at,
+            articles.votes,
+            articles.article_img_url,
+            COUNT(comments.article_id) AS comment_count
+            FROM articles
+            LEFT JOIN comments 
+            ON articles.article_id = comments.article_id 
+            WHERE articles.topic = $1
+            GROUP BY articles.article_id
+            ORDER BY created_at DESC;`, [topic]).then(({rows})=>{
+                    return rows
+                })
+
+        }}
+        else{
+            return Promise.reject({status:404,msg:'Topic not found'})
+        }
+    })
+    }
+        
+
+
 
 exports.fetchAllComs = (iD)=>{
     let query = `SELECT * FROM comments` 

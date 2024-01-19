@@ -10,7 +10,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles ordered descending , depending on input query",
+    "description": "serves an array of all articles ordered descending , depending on input query (default = created_at, QUERY - can be queried with a topic to filter results based on input query"
+    ,
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [

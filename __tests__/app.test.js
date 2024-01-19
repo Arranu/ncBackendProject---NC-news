@@ -267,9 +267,37 @@ describe("task 10 - /api/users",()=>{
                     avatar_url:
                       'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
                   }
-                expect(body.users[0]).toMatchObject(desiredObj)    
+                expect(Array.isArray(body.users)).toBe(true)
+                expect(body.users[0]).toMatchObject(desiredObj)
                 expect(body.users.length).toBe(4)
             })
         })
+    })
+})
+describe("task 11 - /api/articles?topic= *",()=>{
+    describe("GET QUERY - topic",()=>{
+        test("status code:200 and returns an array of articles filtered by topic",()=>{
+            return request(app).get("/api/articles?topic=cats")
+            .expect(200).then(({body})=>{
+                expect(body.articles.length).toBe(1)
+                body.articles.forEach((article)=>{
+                    expect(article.topic).toBe('cats')
+                })
+            })
+        })
+        test("status code:200 and returns an empty array when topic is valid but not featured in any article",()=>{
+            return request(app).get("/api/articles?topic=paper")
+            .expect(200).then(({body})=>{
+                expect(body.articles.length).toBe(0)
+                expect(body.articles).toEqual([])
+            })
+        })
+        test("error:404 when query subject is valid but not found",()=>{
+            return request(app).get("/api/articles?topic=dogs")
+            .expect(404).then(({body})=>{
+                expect(body.msg).toBe('Topic not found')
+            })
+        })
+
     })
 })
