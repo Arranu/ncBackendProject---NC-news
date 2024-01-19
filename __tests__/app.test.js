@@ -256,3 +256,20 @@ describe("task 9 - /api/comments/:comment_id",()=>{
         })
     })
 })
+describe("task 10 - /api/users",()=>{
+    describe("GET",()=>{
+        test("status code :200 and returns an array of users ",()=>{
+            return request(app).get("/api/users")
+            .expect(200).then(({body})=>{
+                const desiredObj =     {
+                    username: 'butter_bridge',
+                    name: 'jonny',
+                    avatar_url:
+                      'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+                  }
+                expect(body.users[0]).toMatchObject(desiredObj)    
+                expect(body.users.length).toBe(4)
+            })
+        })
+    })
+})
