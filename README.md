@@ -53,7 +53,7 @@ $ npm install <dependencies>
 - "supertest" "^6.3.4"
 
 
-# Setup - seeding
+# Seeding
 Next run the following via terminal:
 
 ```
