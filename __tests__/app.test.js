@@ -37,7 +37,7 @@ describe("task 3 - /api",()=>{
         })
     })
 })
-describe("task 4 - /api/articles/:article_id",()=>{
+describe("task 4/ task 12 - /api/articles/:article_id - UPDATE - involve a comment_count of all comments assocated with article_id",()=>{
     describe("GET",()=>{
         test("status code:200 and correct object returned",()=>{
         return request(app).get("/api/articles/1")
@@ -53,6 +53,7 @@ describe("task 4 - /api/articles/:article_id",()=>{
                 votes: 100,
                 article_img_url:
                     "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                comment_count: "11"
           })
         })
         
