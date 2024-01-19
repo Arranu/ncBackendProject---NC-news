@@ -21,23 +21,23 @@ Now do the same for the development ('.env-development').
 # Dependencies
 below is the tech stack required to run the api in both development and test enviroments:
 
-$ sudo apt install nodejs
+`code` $ sudo apt install nodejs
 -node.js "^20.10.0" 
 
 $ sudo apt install postgresql
 -"postgresql": "^14.10"
 
 $ npm install <dev_dependencies> --save-dev
--"husky" :"^8.0.3"
--"jest" :"^27.5.1"
--"jest-extended" :"^2.0.0"
--"pg-format" :"^1.0.4"
+- "husky" :"^8.0.3"
+- "jest" :"^27.5.1"
+- "jest-extended" :"^2.0.0"
+- "pg-format" :"^1.0.4"
 
 $ npm install <dependencies>
 - "dotenv" "^16.0.0"
--"express" "^4.18.2"
--"pg" "^8.7.3"
--"supertest" "^6.3.4"
+- "express" "^4.18.2"
+- "pg" "^8.7.3"
+- "supertest" "^6.3.4"
 
 
 # Setup - seeding
