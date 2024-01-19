@@ -285,5 +285,11 @@ describe("task 11 - /api/articles?topic= *",()=>{
                 })
             })
         })
+        test("error:404 when query subject is valid but not found",()=>{
+            return request(app).get("/api/articles?topic=dogs")
+            .expect(404).then(({body})=>{
+                expect(body.msg).toBe('Topic not found')
+            })
+        })
     })
 })
