@@ -27,13 +27,13 @@ below is the tech stack required to run the api in both development and test env
 $ sudo apt install nodejs
 ```
 
--node.js "^20.10.0" 
+"node.js":"^20.10.0" 
 
 ```
 $ sudo apt install postgresql
 ```
 
--"postgresql": "^14.10"
+"postgresql": "^14.10"
 
 ```
 $ npm install <dev_dependencies> --save-dev
