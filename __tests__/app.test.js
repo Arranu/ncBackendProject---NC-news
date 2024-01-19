@@ -280,9 +280,16 @@ describe("task 11 - /api/articles?topic= *",()=>{
             return request(app).get("/api/articles?topic=cats")
             .expect(200).then(({body})=>{
                 expect(body.articles.length).toBe(1)
-                body.articles.every((article)=>{
+                body.articles.forEach((article)=>{
                     expect(article.topic).toBe('cats')
                 })
+            })
+        })
+        test("status code:200 and returns an empty array when topic is valid but not featured in any article",()=>{
+            return request(app).get("/api/articles?topic=paper")
+            .expect(200).then(({body})=>{
+                expect(body.articles.length).toBe(0)
+                expect(body.articles).toEqual([])
             })
         })
         test("error:404 when query subject is valid but not found",()=>{

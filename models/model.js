@@ -23,9 +23,9 @@ exports.fetchSpecArt = (iD)=>{
 }
 
 exports.fetchAllArt = (topic)=>{
-    return db.query(`SELECT topic FROM articles`).then(({rows})=>{
+    return db.query(`SELECT slug FROM topics`).then(({rows})=>{
         if(rows.some((row)=>{
-            return topic === row.topic 
+            return topic === row.slug
         })||topic ===undefined)
         {if(topic === undefined){
             return db.query(`
