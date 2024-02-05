@@ -1,7 +1,9 @@
 const express = require("express")
+const cors =require('cors')
 const app = express()
 const {getTopics,getApi,getUsers,getSpecArt,getAllArt,getAllComs,postComment,patchArticle,deleteComment} = require("./controllers/controller")
 const {notFoundEndpoint,customError,invalidError,internalError, unprocessError} = require("./error-handling/error-handlers")
+app.use(cors())
 app.use(express.json())
 //get all endpoints
 app.get("/api", getApi)
