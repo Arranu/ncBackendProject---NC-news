@@ -126,6 +126,21 @@ exports.updateArticle = (article_id,newVotes)=>{
         })
     
 }
+//refactor these two into one function at some point
+exports.updateComment = (comment_id,newVotes)=>{
+    if(typeof newVotes.inc_votes !== "number") return Promise.reject({status:400 ,msg:'Bad request'})
+        return db.query(`
+        UPDATE comments
+        SET votes = votes + $1
+        WHERE comment_id = $2
+        RETURNING *`,
+        [newVotes.inc_votes,comment_id])
+        .then(({rows})=>{
+            if(rows.length < 1) return Promise.reject({status:404 ,msg:'Article does not exist'})
+            return rows.shift()
+        })
+    
+}
 
 exports.removeComment = (iD)=>{
     return db.query(`SELECT * FROM comments

@@ -1,4 +1,4 @@
-const {fetchAllArt,fetchUsers,fetchSpecArt,fetchTopics,fetchAllComs,insertComment,updateArticle,removeComment} = require("../models/model")
+const {fetchAllArt,fetchUsers,fetchSpecArt,fetchTopics,fetchAllComs,insertComment,updateArticle,updateComment,removeComment} = require("../models/model")
 const apiFile = require("../endpoints.json")
 exports.getTopics = (req,res,next)=>{    
     fetchTopics().then((result)=>{
@@ -52,6 +52,14 @@ const newVotes = req.body
         res.status(200).send({updatedArt})
     }).catch(next)
 }
+//refactor these two into one function at some point
+exports.patchComment = (req,res,next)=>{
+    const iD = req.params.comment_id
+    const newVotes = req.body
+        updateComment(iD,newVotes).then((updatedArt)=>{
+            res.status(200).send({updatedArt})
+        }).catch(next)
+    }
 
 exports.deleteComment = (req,res,next)=>{
 const iD = req.params.comment_id

@@ -1,10 +1,11 @@
 const express = require("express")
 const cors =require('cors')
 const app = express()
-const {getTopics,getApi,getUsers,getSpecArt,getAllArt,getAllComs,postComment,patchArticle,deleteComment} = require("./controllers/controller")
+const {getTopics,getApi,getUsers,getSpecArt,getAllArt,getAllComs,postComment,patchArticle,deleteComment, patchComment} = require("./controllers/controller")
 const {notFoundEndpoint,customError,invalidError,internalError, unprocessError} = require("./error-handling/error-handlers")
 app.use(cors())
 app.use(express.json())
+//CREATE get specific user, post new article, post new topic
 //get all endpoints
 app.get("/api", getApi)
 
@@ -13,6 +14,7 @@ app.get("/api/topics", getTopics)
 
 //get all users
 app.get("/api/users",getUsers)
+
 
 //get all articles
 app.get("/api/articles",getAllArt)
@@ -28,6 +30,9 @@ app.post("/api/articles/:article_id/comments",postComment)
 
 //patch votes on existing article
 app.patch("/api/articles/:article_id",patchArticle)
+
+//patch votes on existing comment
+app.patch("/api/comments/:comment_id",patchComment)
 
 //delete comment associated with article_id
 app.delete("/api/comments/:comment_id",deleteComment )
