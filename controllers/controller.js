@@ -45,21 +45,21 @@ const newComment = req.body
     }).catch(next)
 }
 
-exports.patchArticle = (req,res,next)=>{
-const iD = req.params.article_id
-const newVotes = req.body
-    updateArticle(iD,newVotes).then((updatedArt)=>{
-        res.status(200).send({updatedArt})
-    }).catch(next)
-}
-//refactor these two into one function at some point
-exports.patchComment = (req,res,next)=>{
-    const iD = req.params.comment_id
+exports.patchVote= (req,res,next)=>{
+    const aId = req.params.article_id 
+    const cId = req.params.comment_id 
     const newVotes = req.body
-        updateComment(iD,newVotes).then((updatedArt)=>{
+        if(aId){
+        updateArticle(aId,newVotes).then((updatedArt)=>{
+            res.status(200).send({updatedArt})
+        }).catch(next)
+        }else{
+        updateComment(cId,newVotes).then((updatedArt)=>{
             res.status(200).send({updatedArt})
         }).catch(next)
     }
+}
+
 
 exports.deleteComment = (req,res,next)=>{
 const iD = req.params.comment_id
