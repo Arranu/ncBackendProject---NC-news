@@ -54,8 +54,8 @@ exports.patchVote= (req,res,next)=>{
             res.status(200).send({updatedArt})
         }).catch(next)
         }else{
-        updateComment(cId,newVotes).then((updatedArt)=>{
-            res.status(200).send({updatedArt})
+        updateComment(cId,newVotes).then((updatedCom)=>{
+            res.status(200).send({updatedCom})
         }).catch(next)
     }
 }

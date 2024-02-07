@@ -83,10 +83,8 @@ exports.fetchAllArt = (topic)=>{
 
 
 exports.fetchAllComs = (iD)=>{
-    let query = `SELECT * FROM comments` 
-    query += ` WHERE article_id = ${iD}`
-    query += ` ORDER BY created_at`
-        return db.query(query).then(({rows})=>{
+        return db.query(`SELECT * FROM comments 
+        WHERE article_id = $1 ORDER BY created_at`,[iD]).then(({rows})=>{
             if(rows.length < 1) {
                 return db.query(`SELECT * FROM articles WHERE article_id = $1`,[iD]).then(({rows})=>{
                     if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
@@ -126,7 +124,6 @@ exports.updateArticle = (article_id,newVotes)=>{
         })
     
 }
-//refactor these two into one function at some point
 exports.updateComment = (comment_id,newVotes)=>{
     if(typeof newVotes.inc_votes !== "number") return Promise.reject({status:400 ,msg:'Bad request'})
         return db.query(`

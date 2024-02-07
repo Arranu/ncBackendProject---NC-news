@@ -307,7 +307,7 @@ describe("task 18 - /api/comments/:comment_id",()=>{
         test("status code:200 and returns updated object with votes increased",()=>{
             return request(app).patch("/api/comments/2").send({inc_votes: 3})
             .expect(200).then(({body})=>{
-                expect(body.updatedArt).toMatchObject(  {
+                expect(body.updatedCom).toMatchObject(  {
                     body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
                     votes: 17,
                     author: "butter_bridge",
