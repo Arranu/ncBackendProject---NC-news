@@ -1,4 +1,4 @@
-const {fetchAllArt,fetchUsers,fetchSpecArt,fetchTopics,fetchAllComs,insertComment,updateArticle,updateComment,removeComment} = require("../models/model")
+const {fetchAllArt,fetchUsers,fetchSpecArt,fetchTopics,fetchAllComs,insertComment,updateArticle,updateComment,removeComment, fetchSpecUser} = require("../models/model")
 const apiFile = require("../endpoints.json")
 exports.getTopics = (req,res,next)=>{    
     fetchTopics().then((result)=>{
@@ -11,7 +11,12 @@ exports.getUsers = (req,res,next)=>{
         res.status(200).send({users:result})
     }).catch(next)
 }
-
+exports.getSpecUser = (req,res,next)=>{
+    const user= req.params.username
+    fetchSpecUser(user).then((result)=>{
+        res.status(200).send({user:result})
+    }).catch(next)
+}
 exports.getApi = (req,res)=>{
     res.status(200).send({endpoints:apiFile})
 }

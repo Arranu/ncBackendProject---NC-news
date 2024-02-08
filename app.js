@@ -1,11 +1,11 @@
 const express = require("express")
 const cors =require('cors')
 const app = express()
-const {getTopics,getApi,getUsers,getSpecArt,getAllArt,getAllComs,postComment,patchVote ,deleteComment, patchComment} = require("./controllers/controller")
+const {getTopics,getApi,getUsers,getSpecArt,getAllArt,getAllComs,postComment,patchVote ,deleteComment, getSpecUser} = require("./controllers/controller")
 const {notFoundEndpoint,customError,invalidError,internalError, unprocessError} = require("./error-handling/error-handlers")
 app.use(cors())
 app.use(express.json())
-//CREATE get specific user, post new article, post new topic
+//CREATE post new article, post new topic
 //get all endpoints
 app.get("/api", getApi)
 
@@ -14,6 +14,9 @@ app.get("/api/topics", getTopics)
 
 //get all users
 app.get("/api/users",getUsers)
+
+//get specific user
+app.get("/api/users/:username",getSpecUser)
 
 
 //get all articles

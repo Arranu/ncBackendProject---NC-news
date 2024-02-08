@@ -302,6 +302,27 @@ describe("task 11 - /api/articles?topic= *",()=>{
 
     })
 })
+describe("task 17 - /api/users/:username",()=>{
+    describe("GET",()=>{
+        test("status code:200 and returns correct user object",()=>{
+            return request(app).get("/api/users/lurker")
+            .expect(200).then(({body})=>{
+                expect(body.user).toMatchObject(  {
+                    username: 'lurker',
+                    name: 'do_nothing',
+                    avatar_url:
+                      'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png'
+                  })
+            })
+        })
+        test("error:404 when user doesnt exist",()=>{
+            return request(app).get("/api/users/notauser")
+            .expect(404).then(({body})=>{
+                expect(body.msg).toBe('User does not exist')
+            })
+        })
+    })
+})
 describe("task 18 - /api/comments/:comment_id",()=>{
     describe("PATCH",()=>{
         test("status code:200 and returns updated object with votes increased",()=>{
@@ -318,3 +339,4 @@ describe("task 18 - /api/comments/:comment_id",()=>{
         })
     })
 })
+

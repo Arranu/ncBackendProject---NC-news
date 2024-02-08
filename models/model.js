@@ -12,7 +12,16 @@ exports.fetchUsers = ()=>{
         return rows
     })
 }
-
+exports.fetchSpecUser = (user)=>{
+    return db.query(
+    `SELECT * FROM users
+    WHERE username = $1;`
+    ,[user]).then(({rows})=>{
+        if(rows.length < 1) return Promise.reject({status:404 ,msg:'User does not exist'})
+        console.log(rows)
+        return rows.shift()
+    })
+}
 exports.fetchSpecArt = (iD)=>{
     return db.query(`
     SELECT 
