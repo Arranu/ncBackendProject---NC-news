@@ -51,17 +51,17 @@ const newComment = req.body
 }
 
 exports.patchVote= (req,res,next)=>{
-    const aId = req.params.article_id 
-    const cId = req.params.comment_id 
-    const newVotes = req.body
-        if(aId){
-        updateArticle(aId,newVotes).then((updatedArt)=>{
-            res.status(200).send({updatedArt})
-        }).catch(next)
-        }else{
-        updateComment(cId,newVotes).then((updatedCom)=>{
-            res.status(200).send({updatedCom})
-        }).catch(next)
+const aId = req.params.article_id 
+const cId = req.params.comment_id 
+const newVotes = req.body
+    if(aId){
+    updateArticle(aId,newVotes).then((updatedArt)=>{
+        res.status(200).send({updatedArt})
+    }).catch(next)
+    }else{
+    updateComment(cId,newVotes).then((updatedCom)=>{
+        res.status(200).send({updatedCom})
+    }).catch(next)
     }
 }
 

@@ -94,7 +94,6 @@ describe("task 5 - /api/articles",()=>{
         test("status code: 200 and returns an array of all articles with correct keys, ordered by date descending",()=>{
             return request(app).get("/api/articles")
             .expect(200).then(({body})=>{
-                console.log(body.articles)
                 expect(body.articles.length).toBe(13)
                 expect(body.articles[0]).toMatchObject({
                     article_id: 3,
@@ -308,7 +307,6 @@ describe("task 15 - /api/articles (sorting queries)",()=>{
         test("status code:200 and returns a query sorted by something other than default (created_at)",()=>{
             return request(app).get("/api/articles?sort_by=title&order=ASC")
             .expect(200).then(({body})=>{
-                console.log(body.articles)
                 expect(body.articles.length).toBe(13)
                 expect(body.articles[0]).toMatchObject({
                     article_id: 6,
