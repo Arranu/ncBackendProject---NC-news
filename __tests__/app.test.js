@@ -94,6 +94,7 @@ describe("task 5 - /api/articles",()=>{
         test("status code: 200 and returns an array of all articles with correct keys, ordered by date descending",()=>{
             return request(app).get("/api/articles")
             .expect(200).then(({body})=>{
+                console.log(body.articles)
                 expect(body.articles.length).toBe(13)
                 expect(body.articles[0]).toMatchObject({
                     article_id: 3,
@@ -300,6 +301,28 @@ describe("task 11 - /api/articles?topic= *",()=>{
             })
         })
 
+    })
+})
+describe("task 15 - /api/articles (sorting queries)",()=>{
+    describe("GET QUERY - sort_by",()=>{
+        test("status code:200 and returns a query sorted by something other than default (created_at)",()=>{
+            return request(app).get("/api/articles?sort_by=title&order=ASC")
+            .expect(200).then(({body})=>{
+                console.log(body.articles)
+                expect(body.articles.length).toBe(13)
+                expect(body.articles[0]).toMatchObject({
+                    article_id: 6,
+                    title: "A",
+                    topic: "mitch",
+                    author: "icellusedkars",
+                    votes:0,
+                    created_at: expect.stringMatching(datePattern),
+                    article_img_url:
+                      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                    comment_count:"1"
+                  })
+            })
+        })
     })
 })
 describe("task 17 - /api/users/:username",()=>{

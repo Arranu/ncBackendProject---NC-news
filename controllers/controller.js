@@ -29,8 +29,8 @@ const iD = req.params.article_id
 }
 
 exports.getAllArt = (req,res,next)=>{
-const {topic} = req.query
-    fetchAllArt(topic).then((result)=>{
+const {topic,sort_by,order} = req.query
+    fetchAllArt(topic,sort_by,order).then((result)=>{
         res.status(200).send({articles:result})
     }).catch(next)
 }
