@@ -2,7 +2,8 @@ const {fetchAllArt,fetchUsers,
     fetchSpecArt,fetchTopics,
     fetchAllComs,insertComment,
     updateArticle,updateComment,
-    removeComment, fetchSpecUser, insertArticle} = require("../models/model")
+    removeComment, fetchSpecUser,
+    insertArticle} = require("../models/model")
 const apiFile = require("../endpoints.json")
 exports.getTopics = (req,res,next)=>{    
     fetchTopics().then((result)=>{
@@ -33,8 +34,8 @@ const iD = req.params.article_id
 }
 
 exports.getAllArt = (req,res,next)=>{
-const {topic,sort_by,order} = req.query
-    fetchAllArt(topic,sort_by,order).then((result)=>{
+const {topic,sort_by,order,page,limit} = req.query
+    fetchAllArt(topic,sort_by,order,page,limit).then((result)=>{
         res.status(200).send({articles:result})
     }).catch(next)
 }
@@ -47,8 +48,8 @@ const newArticle = req.body
 }
 
 exports.getAllComs = (req,res,next)=>{
-const iD = req.params.article_id
-    fetchAllComs(iD).then((result)=>{
+const {article_id,page,limit} = req.params
+    fetchAllComs(article_id,page,limit).then((result)=>{
         res.status(200).send({comments:result})
     }).catch(next)
 }

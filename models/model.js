@@ -1,4 +1,4 @@
-const { promises } = require("supertest/lib/test")
+
 const db = require("../db/connection")
 
 
@@ -37,7 +37,9 @@ exports.fetchSpecArt = (iD)=>{
     })
 }
 
-exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC')=>{
+exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC', page=1, limit=10)=>{
+    const startIndex = parseInt((page-1) * limit)
+    const endIndex = parseInt(page * limit)
     if(topic)
     {return db.query(`SELECT slug FROM topics`).then(({rows})=>{
         if(rows.some((row)=>{
@@ -60,7 +62,7 @@ exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC')=>{
             GROUP BY articles.article_id
             ORDER BY ${sort_by} ${order};`,[topic]
             ).then(({rows})=>{
-                return rows
+                return rows.slice(startIndex,endIndex)
             })
         }else{
             return Promise.reject({status:404 ,msg:'Topic not found'})
@@ -83,26 +85,28 @@ exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC')=>{
             GROUP BY articles.article_id
             ORDER BY ${sort_by} ${order};`
             ).then(({rows})=>{
-                return rows
+                return rows.slice(startIndex,endIndex)
             })
     }
 }
 
-exports.fetchAllComs = (iD)=>{
+exports.fetchAllComs = (article_id,page=1,limit=10)=>{
+    const startIndex = parseInt((page-1) * limit)
+    const endIndex = parseInt(page * limit)
         return db.query(`
         SELECT * FROM comments 
         WHERE article_id = $1
-        ORDER BY created_at`,[iD]).then(({rows})=>{
+        ORDER BY created_at`,[article_id]).then(({rows})=>{
             if(rows.length < 1) {
                 return db.query(`
                 SELECT * FROM articles
-                WHERE article_id = $1`,[iD]).then(({rows})=>{
-                    if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
+                WHERE article_id = $1`,[article_id]).then(({rows})=>{
+                    if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${article_id}`})
                     else return Promise.reject({status:404 ,msg:'Article does not exist'})
                 })
                 
             }
-            return rows
+            return rows.slice(startIndex,endIndex)
         })
 }
 

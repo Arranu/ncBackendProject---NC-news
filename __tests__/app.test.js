@@ -94,7 +94,7 @@ describe("task 5 - /api/articles",()=>{
         test("status code: 200 and returns an array of all articles with correct keys, ordered by date descending",()=>{
             return request(app).get("/api/articles")
             .expect(200).then(({body})=>{
-                expect(body.articles.length).toBe(13)
+                expect(body.articles.length).toBe(10) // updated due to added pagination
                 expect(body.articles[0]).toMatchObject({
                     article_id: 3,
                     author: 'icellusedkars',
@@ -126,7 +126,20 @@ describe("task 6 - /api/articles/:article_id/comments",()=>{
                     created_at: expect.stringMatching(datePattern)
                 })
             })
-        
+        })
+        test("status code:200 and a paginated array of comments",()=>{
+            return request(app).get("/api/articles/1/comments")
+            .expect(200).then(({body})=>{
+                expect(body.comments.length).toBe(10)
+                expect(body.comments[0]).toMatchObject({
+                    comment_id: 9,
+                    body: 'Superficially charming',
+                    article_id: 1,
+                    author: 'icellusedkars',
+                    votes: 0,
+                    created_at: expect.stringMatching(datePattern)
+                })
+            })    
         })
         test("error:404 when article_id is valid but not found",()=>{
             return request(app).get("/api/articles/999/comments")
@@ -307,7 +320,7 @@ describe("task 15 - /api/articles (sorting queries)",()=>{
         test("status code:200 and returns a query sorted by something other than default (created_at) and in non default order(ASC)",()=>{
             return request(app).get("/api/articles?sort_by=title&order=ASC")
             .expect(200).then(({body})=>{
-                expect(body.articles.length).toBe(13)
+                expect(body.articles.length).toBe(10)// updated due to added pagination
                 expect(body.articles[0]).toMatchObject({
                     article_id: 6,
                     title: "A",
@@ -378,6 +391,7 @@ describe("task 19 - /api/articles", ()=>{
                 title:'nonsense',
                 topic:'mitch',
                 body:'jfwuvbwub',
+                created_at: expect.stringMatching(datePattern),
                 article_img_url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'})
             })
         })
