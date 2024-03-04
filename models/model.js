@@ -58,7 +58,7 @@ exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC')=>{
             ON articles.article_id = comments.article_id 
             WHERE articles.topic = $1
             GROUP BY articles.article_id
-            ORDER BY created_at DESC;`,[topic]
+            ORDER BY ${sort_by} ${order};`,[topic]
             ).then(({rows})=>{
                 return rows
             })
@@ -88,19 +88,15 @@ exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC')=>{
     }
 }
 
-
-            
-            
-  
-        
-
-
-
 exports.fetchAllComs = (iD)=>{
-        return db.query(`SELECT * FROM comments 
-        WHERE article_id = $1 ORDER BY created_at`,[iD]).then(({rows})=>{
+        return db.query(`
+        SELECT * FROM comments 
+        WHERE article_id = $1
+        ORDER BY created_at`,[iD]).then(({rows})=>{
             if(rows.length < 1) {
-                return db.query(`SELECT * FROM articles WHERE article_id = $1`,[iD]).then(({rows})=>{
+                return db.query(`
+                SELECT * FROM articles
+                WHERE article_id = $1`,[iD]).then(({rows})=>{
                     if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${iD}`})
                     else return Promise.reject({status:404 ,msg:'Article does not exist'})
                 })
@@ -110,7 +106,9 @@ exports.fetchAllComs = (iD)=>{
         })
 }
 
-exports.insertComment = (article_id,{userName,body},created_at=new Date(),votes = 0)=>{
+exports.insertComment = (article_id,{userName,body})=>{
+    const created_at=new Date()
+    const votes = 0
     if(typeof userName !=="string"||typeof body!=="string") return Promise.reject({status:400 ,msg:'Bad request'})
         return db.query(`
         INSERT INTO comments
@@ -154,7 +152,8 @@ exports.updateComment = (comment_id,newVotes)=>{
 }
 
 exports.removeComment = (iD)=>{
-    return db.query(`SELECT * 
+    return db.query(`
+        SELECT * 
         FROM comments
         WHERE comment_id = $1`,[iD])
         .then(({rows})=>{ 
@@ -165,4 +164,20 @@ exports.removeComment = (iD)=>{
         WHERE comment_id = $1`,
         [iD])}
         })
+}
+
+exports.insertArticle = ({author,title,topic,body,article_img_url})=>{
+const created_at=new Date()
+const votes = 0
+    if(typeof author !=='string'|| typeof title !=='string'||typeof body !=='string'|| typeof article_img_url !=='string') return Promise.reject({status:400 ,msg:'Bad request'})
+    return db.query(`
+    INSERT INTO articles
+    (author, title, topic, body, article_img_url, created_at, votes)
+    VALUES
+    ($1,$2,$3,$4,$5,$6,$7)
+    RETURNING *`,
+    [author,title,topic,body,article_img_url,created_at,votes])
+    .then(({rows})=>{
+        return rows.shift()
+    })
 }

@@ -229,7 +229,7 @@ describe("task 8 - /api/articles/:article_id",()=>{
                 expect(result.body.msg).toBe('Article does not exist')
             })
         })
-        test("error:400 when requested article does not exist",()=>{
+        test("error:400 when requested article is wrong datatype",()=>{
             return request(app).patch("/api/articles/one").send({inc_votes: 4})
             .expect(400).then((result)=>{
                 expect(result.body.msg).toBe('Bad request')
@@ -262,7 +262,7 @@ describe("task 10 - /api/users",()=>{
         test("status code :200 and returns an array of users ",()=>{
             return request(app).get("/api/users")
             .expect(200).then(({body})=>{
-                const desiredObj =     {
+                const desiredObj ={
                     username: 'butter_bridge',
                     name: 'jonny',
                     avatar_url:
@@ -304,7 +304,7 @@ describe("task 11 - /api/articles?topic= *",()=>{
 })
 describe("task 15 - /api/articles (sorting queries)",()=>{
     describe("GET QUERY - sort_by",()=>{
-        test("status code:200 and returns a query sorted by something other than default (created_at)",()=>{
+        test("status code:200 and returns a query sorted by something other than default (created_at) and in non default order(ASC)",()=>{
             return request(app).get("/api/articles?sort_by=title&order=ASC")
             .expect(200).then(({body})=>{
                 expect(body.articles.length).toBe(13)
@@ -328,7 +328,7 @@ describe("task 17 - /api/users/:username",()=>{
         test("status code:200 and returns correct user object",()=>{
             return request(app).get("/api/users/lurker")
             .expect(200).then(({body})=>{
-                expect(body.user).toMatchObject(  {
+                expect(body.user).toMatchObject({
                     username: 'lurker',
                     name: 'do_nothing',
                     avatar_url:
@@ -349,7 +349,7 @@ describe("task 18 - /api/comments/:comment_id",()=>{
         test("status code:200 and returns updated object with votes increased",()=>{
             return request(app).patch("/api/comments/2").send({inc_votes: 3})
             .expect(200).then(({body})=>{
-                expect(body.updatedCom).toMatchObject(  {
+                expect(body.updatedCom).toMatchObject({
                     body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
                     votes: 17,
                     author: "butter_bridge",
@@ -357,6 +357,42 @@ describe("task 18 - /api/comments/:comment_id",()=>{
                     created_at: expect.stringMatching(datePattern),
                   })
             })
+        })
+    })
+})
+describe("task 19 - /api/articles", ()=>{
+    describe("POST",()=>{
+        test("status code:201 and returns a completed article entry",()=>{
+            return request(app).post("/api/articles")
+            .send({
+            author:'rogersop',
+            title:'nonsense',
+            topic:'mitch',
+            body:'jfwuvbwub',
+            article_img_url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'})
+        .expect(201).then(({body})=>{
+            expect(body.newArt).toMatchObject({
+                article_id:14,
+                votes:0,
+                author:'rogersop',
+                title:'nonsense',
+                topic:'mitch',
+                body:'jfwuvbwub',
+                article_img_url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'})
+            })
+        })
+        test("error 400 when the wrond datatypes are submitted",()=>{
+            return request(app).post("/api/articles")
+            .send({
+            author:345,
+            title:true,
+            topic:false,
+            body:56546,
+            article_img_url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'})
+            .expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad request')
+        })
+
         })
     })
 })
