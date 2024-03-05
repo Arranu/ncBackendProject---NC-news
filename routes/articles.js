@@ -4,26 +4,28 @@ const {getAllArt,getSpecArt,
         postComment, postArticle,
         deleteEntity} = require('../controllers/controller')
 
+artRouter
+.route('/')
 //get all articles
-artRouter.get('/',getAllArt)
-
+.get(getAllArt)
 //post a new article
-artRouter.post('/',postArticle)
+.post(postArticle)
 
+artRouter
+.route('/:article_id')
 //get specific article
-artRouter.get('/:article_id',getSpecArt)
-
+.get(getSpecArt)
 //patch votes on existing article
-artRouter.patch('/:article_id',patchVote)
-
+.patch(patchVote)
 //delete an article
-artRouter.delete('/:article_id',deleteEntity)
+.delete(deleteEntity)
 
+artRouter
+.route('/:article_id/comments')
 //get all comments for specific article
-artRouter.get('/:article_id/comments', getAllComs)
-
+.get(getAllComs)
 //post new comment on specific article
-artRouter.post('/:article_id/comments',postComment)
+.post(postComment)
 
 
 

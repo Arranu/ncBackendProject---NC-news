@@ -1,9 +1,11 @@
 const comRouter = require('express').Router();
 const {patchVote,deleteEntity} =require('../controllers/controller')
-//patch votes on existing comment
-comRouter.patch('/:comment_id',patchVote)
 
+comRouter
+.route('/:comment_id')
+//patch votes on existing comment
+.patch(patchVote)
 //delete comment associated with article_id
-comRouter.delete('/:comment_id',deleteEntity)
+.delete(deleteEntity)
 
 module.exports = comRouter
