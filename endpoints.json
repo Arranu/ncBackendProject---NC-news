@@ -4,15 +4,13 @@
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
-    "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles ordered descending , depending on input query (default = created_at, QUERY - can be queried with a topic to filter results based on input query"
-    ,
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all articles ordered descending , depending on input query (default = created_at, QUERY - can be queried with a topic to filter results based on input query)",
+    "queries": ["author", "topic", "sort_by", "order", "limit, page"],
     "exampleResponse": {
       "articles": [
         {
@@ -56,9 +54,42 @@
       "created_at": "2020-06-20T07:24:00.000Z"
     }
   },
+  "GET /api/users":{
+    "description":"serves an array of all user objects",
+    "exampleResponse":{ "users:":
+      {"username": "icellusedkars",
+      "name": "sam",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"}
+    }
+  },
+  "GET /api/users/:username":{
+    "description":"serves an array of all user objects coresponding to a specific ",
+    "queries": ["username"],
+    "exampleResponse":{
+      "username": "butter_bridge",
+      "name": "jonny",
+      "avatar_url":
+        "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+    }
+  },
+  "POST /api/topics":{
+    "description": "posts a new topic to the topics database",
+    "exampleResponse":  {
+      "description": "what books are made of",
+      "slug": "paper"
+    }
+  },
+  "POST /api/articles":{
+    "description": "posts a new article object to articles database",
+    "exampleResponse":{
+     "author":"rogersop",
+      "title":"nonsense",
+      "topic":"mitch",
+      "body":"jfwuvbwub",
+      "article_img_url":"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"}
+  },
   "POST /api/articles/:article_id/comments":{
     "description": "creates a new comment associated with inputted article_id",
-    "queries": ["article_id","userName","body","created_at","votes"],
     "exampleResponse": {
       "comment_id": 10,
       "body": "git push origin master",
@@ -82,10 +113,6 @@
         "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
     }
   },
-  "DELETE /api/comments/:comment_id": {
-    "description": "deletes comment object associated with inputted comment_id",
-    "queries":["comment_id"]
-  },
   "PATCH /api/comments/:comment_id":{
     "description": "edits the number of votes on an existing comment ",
     "queries": ["comment_id","newVotes"],
@@ -96,5 +123,13 @@
       "article_id": 1,
       "created_at": 1594329060000
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment object associated with inputted comment_id",
+    "queries":["comment_id"]
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes article object associated with inputted article_id",
+    "queries":["article_id"]
   }
 }
