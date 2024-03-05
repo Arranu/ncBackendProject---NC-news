@@ -3,8 +3,10 @@ const {fetchAllArt,fetchUsers,
     fetchAllComs,insertComment,
     updateArticle,updateComment,
     removeComment, fetchSpecUser,
-    insertArticle} = require("../models/model")
+    insertArticle,insertTopic
+    } = require("../models/model")
 const apiFile = require("../endpoints.json")
+
 exports.getTopics = (req,res,next)=>{    
     fetchTopics().then((result)=>{
         res.status(200).send({topics:result})
@@ -17,7 +19,7 @@ exports.getUsers = (req,res,next)=>{
     }).catch(next)
 }
 exports.getSpecUser = (req,res,next)=>{
-    const user= req.params.username
+const user= req.params.username
     fetchSpecUser(user).then((result)=>{
         res.status(200).send({user:result})
     }).catch(next)
@@ -40,6 +42,12 @@ const {topic,sort_by,order,page,limit} = req.query
     }).catch(next)
 }
 
+exports.getAllComs = (req,res,next)=>{
+const {article_id,page,limit} = req.params
+    fetchAllComs(article_id,page,limit).then((result)=>{
+        res.status(200).send({comments:result})
+    }).catch(next)
+}
 exports.postArticle = (req,res,next)=>{
 const newArticle = req.body
     insertArticle(newArticle).then((newArt)=>{
@@ -47,12 +55,6 @@ const newArticle = req.body
     }).catch(next)
 }
 
-exports.getAllComs = (req,res,next)=>{
-const {article_id,page,limit} = req.params
-    fetchAllComs(article_id,page,limit).then((result)=>{
-        res.status(200).send({comments:result})
-    }).catch(next)
-}
 
 exports.postComment = (req,res,next)=>{
 const iD = req.params.article_id
@@ -62,21 +64,28 @@ const newComment = req.body
     }).catch(next)
 }
 
+exports.postTopic = (req,res,next)=>{
+const newTopic = req.body
+    insertTopic(newTopic).then((newTop)=>{
+        res.status(201).send({newTop})
+    }).catch(next)
+}
+
+
 exports.patchVote= (req,res,next)=>{
 const aId = req.params.article_id 
 const cId = req.params.comment_id 
 const newVotes = req.body
     if(aId){
-    updateArticle(aId,newVotes).then((updatedArt)=>{
-        res.status(200).send({updatedArt})
-    }).catch(next)
+        updateArticle(aId,newVotes).then((updatedArt)=>{
+            res.status(200).send({updatedArt})
+        }).catch(next)
     }else{
-    updateComment(cId,newVotes).then((updatedCom)=>{
-        res.status(200).send({updatedCom})
-    }).catch(next)
+        updateComment(cId,newVotes).then((updatedCom)=>{
+            res.status(200).send({updatedCom})
+        }).catch(next)
     }
 }
-
 
 exports.deleteComment = (req,res,next)=>{
 const iD = req.params.comment_id

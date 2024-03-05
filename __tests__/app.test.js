@@ -395,7 +395,7 @@ describe("task 19 - /api/articles", ()=>{
                 article_img_url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'})
             })
         })
-        test("error 400 when the wrond datatypes are submitted",()=>{
+        test("error 400 when the wrong datatypes are submitted",()=>{
             return request(app).post("/api/articles")
             .send({
             author:345,
@@ -410,4 +410,32 @@ describe("task 19 - /api/articles", ()=>{
         })
     })
 })
+describe("task 22 - /api/topics",()=>{
+    describe("POST",()=>{
+        test("status code:201 and returns a newly created topic object",()=>{
+            return request(app).post("/api/topics")
+            .send({
+                slug:'topic_name',
+                description:"topic_description"
+            })
+            .expect(201).then(({body})=>{
+                expect(body.newTop).toMatchObject({
+                slug:'topic_name',
+                description:"topic_description"
+                })
+            })
+        })
+        test("error 400 when the wrong datatypes are submitted", ()=>{
+            return request(app).post("/api/topics")
+            .send({
+                slug:1234,
+                description:123
+            })
+            .expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad request')
+            })
+        })
+    })
+})
+
 

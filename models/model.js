@@ -38,8 +38,8 @@ exports.fetchSpecArt = (iD)=>{
 }
 
 exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC', page=1, limit=10)=>{
-    const startIndex = parseInt((page-1) * limit)
-    const endIndex = parseInt(page * limit)
+const startIndex = parseInt((page-1) * limit)
+const endIndex = parseInt(page * limit)
     if(topic)
     {return db.query(`SELECT slug FROM topics`).then(({rows})=>{
         if(rows.some((row)=>{
@@ -91,29 +91,29 @@ exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC', page=1, limi
 }
 
 exports.fetchAllComs = (article_id,page=1,limit=10)=>{
-    const startIndex = parseInt((page-1) * limit)
-    const endIndex = parseInt(page * limit)
-        return db.query(`
-        SELECT * FROM comments 
-        WHERE article_id = $1
-        ORDER BY created_at`,[article_id]).then(({rows})=>{
-            if(rows.length < 1) {
-                return db.query(`
-                SELECT * FROM articles
-                WHERE article_id = $1`,[article_id]).then(({rows})=>{
-                    if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${article_id}`})
-                    else return Promise.reject({status:404 ,msg:'Article does not exist'})
-                })
-                
-            }
-            return rows.slice(startIndex,endIndex)
-        })
+const startIndex = parseInt((page-1) * limit)
+const endIndex = parseInt(page * limit)
+    return db.query(`
+    SELECT * FROM comments 
+    WHERE article_id = $1
+    ORDER BY created_at`,[article_id]).then(({rows})=>{
+        if(rows.length < 1) {
+            return db.query(`
+            SELECT * FROM articles
+            WHERE article_id = $1`,[article_id]).then(({rows})=>{
+                if(!rows.length < 1) return Promise.reject({status:200, msg:`No comments for article ${article_id}`})
+                else return Promise.reject({status:404 ,msg:'Article does not exist'})
+            })
+            
+        }
+        return rows.slice(startIndex,endIndex)
+    })
 }
 
 exports.insertComment = (article_id,{userName,body})=>{
-    const created_at=new Date()
-    const votes = 0
-    if(typeof userName !=="string"||typeof body!=="string") return Promise.reject({status:400 ,msg:'Bad request'})
+const created_at=new Date()
+const votes = 0
+    if(typeof userName !=="string"||typeof body!=="string"||!userName||!body) return Promise.reject({status:400 ,msg:'Bad request'})
         return db.query(`
         INSERT INTO comments
         (article_id, author,body,created_at,votes) 
@@ -124,8 +124,38 @@ exports.insertComment = (article_id,{userName,body})=>{
         .then(({rows})=>{
             return rows.shift()
         })
+    }
+
+exports.insertArticle = ({author,title,topic,body,article_img_url})=>{
+const created_at=new Date()
+const votes = 0
+    if(typeof author !=='string'|| typeof title !=='string'||typeof body !=='string'|| typeof article_img_url !=='string') return Promise.reject({status:400 ,msg:'Bad request'})
+    return db.query(`
+    INSERT INTO articles
+    (author, title, topic, body, article_img_url, created_at, votes)
+    VALUES
+    ($1,$2,$3,$4,$5,$6,$7)
+    RETURNING *`,
+    [author,title,topic,body,article_img_url,created_at,votes])
+    .then(({rows})=>{
+        return rows.shift()
+    })
 }
 
+exports.insertTopic = ({slug, description})=>{
+    if(typeof slug !=='string'||typeof description !=='string'||!slug||!description) return Promise.reject({status:400 ,msg:'Bad request'})
+    return db.query(`
+    INSERT INTO topics
+    (slug,description)
+    VALUES
+    ($1,$2)
+    RETURNING *`,
+    [slug,description])
+    .then(({rows})=>{
+        return rows.shift()
+    })
+}
+    
 exports.updateArticle = (article_id,newVotes)=>{
     if(typeof newVotes.inc_votes !== "number") return Promise.reject({status:400 ,msg:'Bad request'})
         return db.query(`
@@ -170,18 +200,3 @@ exports.removeComment = (iD)=>{
         })
 }
 
-exports.insertArticle = ({author,title,topic,body,article_img_url})=>{
-const created_at=new Date()
-const votes = 0
-    if(typeof author !=='string'|| typeof title !=='string'||typeof body !=='string'|| typeof article_img_url !=='string') return Promise.reject({status:400 ,msg:'Bad request'})
-    return db.query(`
-    INSERT INTO articles
-    (author, title, topic, body, article_img_url, created_at, votes)
-    VALUES
-    ($1,$2,$3,$4,$5,$6,$7)
-    RETURNING *`,
-    [author,title,topic,body,article_img_url,created_at,votes])
-    .then(({rows})=>{
-        return rows.shift()
-    })
-}
