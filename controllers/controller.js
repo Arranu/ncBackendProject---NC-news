@@ -3,7 +3,7 @@ const {fetchAllArt,fetchUsers,
     fetchAllComs,insertComment,
     updateArticle,updateComment,
     removeComment, fetchSpecUser,
-    insertArticle,insertTopic
+    insertArticle,insertTopic, removeArticle
     } = require("../models/model")
 const apiFile = require("../endpoints.json")
 
@@ -87,9 +87,17 @@ const newVotes = req.body
     }
 }
 
-exports.deleteComment = (req,res,next)=>{
-const iD = req.params.comment_id
-    removeComment(iD).then(()=>{
-        res.status(204).send()
-    }).catch(next)
+exports.deleteEntity = (req,res,next)=>{
+const aId = req.params.article_id 
+const cId = req.params.comment_id
+    if(aId){
+        removeArticle(aId).then(()=>{
+            res.status(204).send()
+        }).catch(next)
+    }else{
+        removeComment(cId).then(()=>{
+            res.status(204).send()
+        }).catch(next)
+    }
 }
+

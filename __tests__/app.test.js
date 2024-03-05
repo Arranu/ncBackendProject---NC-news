@@ -438,4 +438,25 @@ describe("task 22 - /api/topics",()=>{
     })
 })
 
+describe("task 23 - /api/articles/:article_id",()=>{
+    describe("DELETE",()=>{
+        test("status code:204 and object is deleted",()=>{
+            return request(app).delete("/api/articles/8")
+            .expect(204)
+        })
+        test("error:400 when article_id is invalid",()=>{
+            return request(app).delete("/api/articles/one")
+            .expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad request')
+            })
+        })
+        test("error:404 when article_id is valid but not found",()=>{
+            return request(app).delete("/api/articles/99")
+            .expect(404).then(({body})=>{
+                expect(body.msg).toBe('Article does not exist')
+            })
+        })
+    })
+})
+
 

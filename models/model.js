@@ -185,18 +185,33 @@ exports.updateComment = (comment_id,newVotes)=>{
     
 }
 
-exports.removeComment = (iD)=>{
+exports.removeComment = (cId)=>{
     return db.query(`
         SELECT * 
         FROM comments
-        WHERE comment_id = $1`,[iD])
+        WHERE comment_id = $1`,[cId])
         .then(({rows})=>{ 
         if(rows.length < 1) return Promise.reject({status:404 ,msg:'Comment does not exist'})
         else{                        
         return db.query(`
         DELETE FROM comments
         WHERE comment_id = $1`,
-        [iD])}
+        [cId])}
         })
+}
+
+exports.removeArticle = (aId)=>{
+    return db.query(`
+    SELECT * 
+    FROM articles
+    WHERE article_id = $1`,[aId])
+    .then(({rows})=>{ 
+    if(rows.length < 1) return Promise.reject({status:404 ,msg:'Article does not exist'})
+    else{                        
+    return db.query(`
+    DELETE FROM articles
+    WHERE article_id = $1`,
+    [aId])}
+    })
 }
 
