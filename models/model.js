@@ -96,7 +96,7 @@ const endIndex = parseInt(page * limit)
     return db.query(`
     SELECT * FROM comments 
     WHERE article_id = $1
-    ORDER BY created_at`,[article_id]).then(({rows})=>{
+    ORDER BY created_at DESC`,[article_id]).then(({rows})=>{
         if(rows.length < 1) {
             return db.query(`
             SELECT * FROM articles
