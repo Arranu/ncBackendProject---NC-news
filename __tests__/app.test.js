@@ -113,13 +113,13 @@ describe("task 5 - /api/articles",()=>{
 })
 describe("task 6 - /api/articles/:article_id/comments",()=>{
     describe("GET",()=>{
-        test("status code:200 and a full array of article 3 comments",()=>{
+        test("status code:200 and a full array of article 3 comments in descending order",()=>{
         return request(app).get("/api/articles/3/comments")
             .expect(200).then(({body})=>{
                 expect(body.comments.length).toBe(2)
                 expect(body.comments[0]).toMatchObject({
-                    comment_id: 10,
-                    body: 'git push origin master',
+                    comment_id: 11,
+                    body: 'Ambidextrous marsupial',
                     article_id: 3,
                     author: 'icellusedkars',
                     votes: 0,
@@ -132,8 +132,8 @@ describe("task 6 - /api/articles/:article_id/comments",()=>{
             .expect(200).then(({body})=>{
                 expect(body.comments.length).toBe(10)
                 expect(body.comments[0]).toMatchObject({
-                    comment_id: 9,
-                    body: 'Superficially charming',
+                    comment_id: 5,
+                    body: 'I hate streaming noses',
                     article_id: 1,
                     author: 'icellusedkars',
                     votes: 0,
