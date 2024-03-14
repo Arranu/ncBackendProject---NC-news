@@ -53,8 +53,10 @@ describe("task 4/ task 12 - /api/articles/:article_id - UPDATE - involve a comme
                 votes: 100,
                 article_img_url:
                     "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-                comment_count: "11"
+                comment_count: "11",
+                
           })
+          
         })
         
     })
@@ -91,11 +93,11 @@ describe("task 4/ task 12 - /api/articles/:article_id - UPDATE - involve a comme
 })
 describe("task 5 - /api/articles",()=>{
     describe("GET",()=>{
-        test("status code: 200 and returns an array of all articles with correct keys, ordered by date descending",()=>{
+        test("status code: 200 and returns an array of all articles with correct keys, ordered by date descending, UPDATE returned object now has additional props for use in pagination",()=>{
             return request(app).get("/api/articles")
             .expect(200).then(({body})=>{
-                expect(body.articles.length).toBe(10) // updated due to added pagination
-                expect(body.articles[0]).toMatchObject({
+                expect(body.articles.paginated.length).toBe(10) // updated due to added pagination
+                expect(body.articles.paginated[0]).toMatchObject({
                     article_id: 3,
                     author: 'icellusedkars',
                     title: 'Eight pug gifs that remind me of mitch',
@@ -116,8 +118,8 @@ describe("task 6 - /api/articles/:article_id/comments",()=>{
         test("status code:200 and a full array of article 3 comments in descending order",()=>{
         return request(app).get("/api/articles/3/comments")
             .expect(200).then(({body})=>{
-                expect(body.comments.length).toBe(2)
-                expect(body.comments[0]).toMatchObject({
+                expect(body.comments.paginated.length).toBe(2)
+                expect(body.comments.paginated[0]).toMatchObject({
                     comment_id: 11,
                     body: 'Ambidextrous marsupial',
                     article_id: 3,
@@ -130,8 +132,8 @@ describe("task 6 - /api/articles/:article_id/comments",()=>{
         test("status code:200 and a paginated array of comments",()=>{
             return request(app).get("/api/articles/1/comments")
             .expect(200).then(({body})=>{
-                expect(body.comments.length).toBe(10)
-                expect(body.comments[0]).toMatchObject({
+                expect(body.comments.paginated.length).toBe(10)
+                expect(body.comments.paginated[0]).toMatchObject({
                     comment_id: 5,
                     body: 'I hate streaming noses',
                     article_id: 1,
@@ -293,8 +295,8 @@ describe("task 11 - /api/articles?topic= *",()=>{
         test("status code:200 and returns an array of articles filtered by topic",()=>{
             return request(app).get("/api/articles?topic=cats")
             .expect(200).then(({body})=>{
-                expect(body.articles.length).toBe(1)
-                body.articles.forEach((article)=>{
+                expect(body.articles.paginated.length).toBe(1)
+                body.articles.paginated.forEach((article)=>{
                     expect(article.topic).toBe('cats')
                 })
             })
@@ -302,8 +304,8 @@ describe("task 11 - /api/articles?topic= *",()=>{
         test("status code:200 and returns an empty array when topic is valid but not featured in any article",()=>{
             return request(app).get("/api/articles?topic=paper")
             .expect(200).then(({body})=>{
-                expect(body.articles.length).toBe(0)
-                expect(body.articles).toEqual([])
+                expect(body.articles.paginated.length).toBe(0)
+                expect(body.articles.paginated).toEqual([])
             })
         })
         test("error:404 when query subject is valid but not found",()=>{
@@ -320,8 +322,8 @@ describe("task 15 - /api/articles (sorting queries)",()=>{
         test("status code:200 and returns a query sorted by something other than default (created_at) and in non default order(ASC)",()=>{
             return request(app).get("/api/articles?sort_by=title&order=ASC")
             .expect(200).then(({body})=>{
-                expect(body.articles.length).toBe(10)// updated due to added pagination
-                expect(body.articles[0]).toMatchObject({
+                expect(body.articles.paginated.length).toBe(10)// updated due to added pagination
+                expect(body.articles.paginated[0]).toMatchObject({
                     article_id: 6,
                     title: "A",
                     topic: "mitch",
@@ -458,5 +460,27 @@ describe("task 23 - /api/articles/:article_id",()=>{
         })
     })
 })
-
+describe("task 24 - multiple endpoints - /api/articles, /api/articles/:article_id/comments ",()=>{
+   describe("GET",()=>{
+        test("returns new object properties useful for pagination in frontend applications",()=>{
+            return request(app).get("/api/articles?page=2&limit=5")
+            .expect(200).then(({body})=>{
+                expect(body.articles.total).toBe(13)
+                expect(body.articles.paginated.length).toBe(5)
+                expect(body.articles.previous).toEqual({page:1,limit:5})
+                expect(body.articles.next).toEqual({page:3,limit:5})
+            })
+        })
+        test.only("returns new object properties useful for pagination in frontend applications",()=>{
+            return request(app).get("/api/articles/1/comments?page=2&limit=5")
+            .expect(200).then(({body})=>{
+                console.log(body)
+                expect(body.comments.total).toBe(11)
+                expect(body.comments.paginated.length).toBe(4)
+                expect(body.comments.previous).toEqual({page:1,limit:4})
+                expect(body.comments.next).toEqual({page:3,limit:4})
+            })
+        })
+   }) 
+})
 

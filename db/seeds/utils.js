@@ -21,5 +21,30 @@ exports.formatComments = (comments, idLookup) => {
   });
 };
 
+exports.paginate = (p="1",l="10",model)=>{
+  const page =parseInt(p)
+  const limit =parseInt(l)
+  const startIndex = (page-1) * limit
+  const endIndex = page * limit
+  const results = {}
+
+  if(endIndex < model.length){
+    results.next ={
+      page: page + 1,
+      limit:limit
+    }
+  }
+  if(startIndex > 0){
+    results.previous = {
+      page: page -1,
+      limit:limit
+    }
+  }
+  results.paginated = model.slice(startIndex, endIndex) 
+  results.total = model.length
+  return results
+  
+
+}
 
 

@@ -1,13 +1,15 @@
+const paginate =require("../db/seeds/utils")
 const artRouter = require('express').Router();
 const {getAllArt,getSpecArt,
         getAllComs,patchVote,
         postComment, postArticle,
         deleteEntity} = require('../controllers/controller')
 
+
 artRouter
 .route('/')
 //get all articles
-.get(getAllArt)
+.get((getAllArt))
 //post a new article
 .post(postArticle)
 

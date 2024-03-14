@@ -6,6 +6,7 @@ const {fetchAllArt,fetchUsers,
     insertArticle,insertTopic, removeArticle
     } = require("../models/model")
 const apiFile = require("../endpoints.json")
+const {paginate} =require("../db/seeds/utils")
 
 exports.getTopics = (req,res,next)=>{    
     fetchTopics().then((result)=>{
@@ -18,12 +19,14 @@ exports.getUsers = (req,res,next)=>{
         res.status(200).send({users:result})
     }).catch(next)
 }
+
 exports.getSpecUser = (req,res,next)=>{
 const user= req.params.username
     fetchSpecUser(user).then((result)=>{
         res.status(200).send({user:result})
     }).catch(next)
 }
+
 exports.getApi = (req,res)=>{
     res.status(200).send({endpoints:apiFile})
 }
@@ -38,14 +41,17 @@ const iD = req.params.article_id
 exports.getAllArt = (req,res,next)=>{
 const {topic,sort_by,order,page,limit} = req.query
     fetchAllArt(topic,sort_by,order,page,limit).then((result)=>{
-        res.status(200).send({articles:result})
+        const paginatedResults = paginate(page,limit,result)
+        res.status(200).send({articles:paginatedResults})
     }).catch(next)
 }
 
 exports.getAllComs = (req,res,next)=>{
 const {article_id,page,limit} = req.params
-    fetchAllComs(article_id,page,limit).then((result)=>{
-        res.status(200).send({comments:result})
+console.log(page,limit)
+    fetchAllComs(article_id).then((result)=>{
+        const paginatedResults = paginate(page,limit,result)
+        res.status(200).send({comments:paginatedResults})
     }).catch(next)
 }
 exports.postArticle = (req,res,next)=>{
@@ -54,7 +60,6 @@ const newArticle = req.body
         res.status(201).send({newArt})
     }).catch(next)
 }
-
 
 exports.postComment = (req,res,next)=>{
 const iD = req.params.article_id
@@ -70,7 +75,6 @@ const newTopic = req.body
         res.status(201).send({newTop})
     }).catch(next)
 }
-
 
 exports.patchVote= (req,res,next)=>{
 const aId = req.params.article_id 

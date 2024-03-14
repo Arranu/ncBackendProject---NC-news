@@ -1,6 +1,6 @@
 
 const db = require("../db/connection")
-
+const paginate =require("../db/seeds/utils")
 
 exports.fetchTopics = () => {
     return db.query(`SELECT * FROM topics;`).then(({rows})=>{
@@ -37,9 +37,7 @@ exports.fetchSpecArt = (iD)=>{
     })
 }
 
-exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC', page=1, limit=10)=>{
-const startIndex = parseInt((page-1) * limit)
-const endIndex = parseInt(page * limit)
+exports.fetchAllArt = (topic,sort_by = 'created_at',order = 'DESC')=>{
     if(topic)
     {return db.query(`SELECT slug FROM topics`).then(({rows})=>{
         if(rows.some((row)=>{
@@ -62,7 +60,9 @@ const endIndex = parseInt(page * limit)
             GROUP BY articles.article_id
             ORDER BY ${sort_by} ${order};`,[topic]
             ).then(({rows})=>{
-                return rows.slice(startIndex,endIndex)
+                
+                
+                return rows
             })
         }else{
             return Promise.reject({status:404 ,msg:'Topic not found'})
@@ -85,14 +85,12 @@ const endIndex = parseInt(page * limit)
             GROUP BY articles.article_id
             ORDER BY ${sort_by} ${order};`
             ).then(({rows})=>{
-                return rows.slice(startIndex,endIndex)
+                return rows
             })
     }
 }
 
-exports.fetchAllComs = (article_id,page=1,limit=10)=>{
-const startIndex = parseInt((page-1) * limit)
-const endIndex = parseInt(page * limit)
+exports.fetchAllComs = (article_id)=>{
     return db.query(`
     SELECT * FROM comments 
     WHERE article_id = $1
@@ -106,7 +104,7 @@ const endIndex = parseInt(page * limit)
             })
             
         }
-        return rows.slice(startIndex,endIndex)
+        return rows
     })
 }
 
