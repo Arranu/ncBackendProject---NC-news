@@ -474,11 +474,10 @@ describe("task 24 - multiple endpoints - /api/articles, /api/articles/:article_i
         test.only("returns new object properties useful for pagination in frontend applications",()=>{
             return request(app).get("/api/articles/1/comments?page=2&limit=5")
             .expect(200).then(({body})=>{
-                console.log(body)
                 expect(body.comments.total).toBe(11)
-                expect(body.comments.paginated.length).toBe(4)
-                expect(body.comments.previous).toEqual({page:1,limit:4})
-                expect(body.comments.next).toEqual({page:3,limit:4})
+                expect(body.comments.paginated.length).toBe(5)
+                expect(body.comments.previous).toEqual({page:1,limit:5})
+                expect(body.comments.next).toEqual({page:3,limit:5})
             })
         })
    }) 

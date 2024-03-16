@@ -47,8 +47,9 @@ const {topic,sort_by,order,page,limit} = req.query
 }
 
 exports.getAllComs = (req,res,next)=>{
-const {article_id,page,limit} = req.params
-console.log(page,limit)
+const {article_id} = req.params
+const {page,limit} = req.query
+
     fetchAllComs(article_id).then((result)=>{
         const paginatedResults = paginate(page,limit,result)
         res.status(200).send({comments:paginatedResults})
