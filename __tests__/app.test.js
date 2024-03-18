@@ -471,7 +471,7 @@ describe("task 24 - multiple endpoints - /api/articles, /api/articles/:article_i
                 expect(body.articles.next).toEqual({page:3,limit:5})
             })
         })
-        test.only("returns new object properties useful for pagination in frontend applications",()=>{
+        test("returns new object properties useful for pagination in frontend applications",()=>{
             return request(app).get("/api/articles/1/comments?page=2&limit=5")
             .expect(200).then(({body})=>{
                 expect(body.comments.total).toBe(11)
